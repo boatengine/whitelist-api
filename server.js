@@ -19,7 +19,7 @@ const connectRcon = async () => {
 };
 
 app.get("/hello", (req, res) => {
-  res.json("eiei");
+  res.json("sss");
 });
 // เพิ่มผู้ใช้ใน Whitelist
 app.post("/api/add-whitelist", async (req, res) => {
