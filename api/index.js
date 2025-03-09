@@ -18,19 +18,12 @@ const connectRcon = async () => {
   });
 };
 
-app.get("/hello", (req, res) => {
-  res.json("sss");
-});
 // เพิ่มผู้ใช้ใน Whitelist
 app.post("/api/add-whitelist", async (req, res) => {
   let { username } = req.body;
 
-  if (!username || !/^[a-zA-Z0-9_]{3,16}$/.test(username)) {
-    return res.status(400).json({ error: "Invalid Minecraft username" });
-  }
-
-  username = JSON.stringify(username).replace(/^"|"$/g, ""); // ป้องกัน Markdown
-
+  username = username.trim();
+  // console.log(username);
   const rcon = await connectRcon();
   try {
     await rcon.connect();
@@ -61,11 +54,7 @@ app.get("/api/whitelist", async (req, res) => {
 app.post("/api/remove-whitelist", async (req, res) => {
   let { username } = req.body;
 
-  if (!username || !/^[a-zA-Z0-9_]{3,16}$/.test(username)) {
-    return res.status(400).json({ error: "Invalid Minecraft username" });
-  }
-
-  username = JSON.stringify(username).replace(/^"|"$/g, ""); // ป้องกัน Markdown
+  username = username.trim();
 
   const rcon = await connectRcon();
   try {
