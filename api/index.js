@@ -70,6 +70,18 @@ app.post("/api/remove-whitelist", async (req, res) => {
   }
 });
 
+app.get("/api/online-server", async (req, res) => {
+  try {
+    const response = await sendRconCommand("list");
+    res.json({ online: parseInt(response.slice(10, 11)) });
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed online server status",
+      details: err.message,
+    });
+  }
+});
+
 // เริ่มเซิร์ฟเวอร์
 app.listen(port, () => {
   console.log(`Minecraft Whitelist API is running on port ${port}`);
