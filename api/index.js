@@ -34,6 +34,7 @@ async function sendRconCommand(command) {
 app.post("/api/add-whitelist", async (req, res) => {
   const { username } = req.body;
   if (!username) return res.status(400).json({ error: "Username is required" });
+  // console.log(username);
   try {
     const response = await sendRconCommand(`whitelist add ${username}`);
     res.json({ message: response.trim() });
@@ -78,6 +79,20 @@ app.get("/api/online-server", async (req, res) => {
     res.status(500).json({
       error: "Failed online server status",
       details: err.message,
+    });
+  }
+});
+
+app.get("/api/online-player", async (req, res) => {
+  try {
+    const response = await sendRconCommand("list");
+    res.status(200).json({
+      player: response.slice(43),
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed online player status",
+      deatails: err.message,
     });
   }
 });
