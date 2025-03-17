@@ -97,6 +97,19 @@ app.get("/api/online-player", async (req, res) => {
   }
 });
 
+app.get("/api/tps", async (req, res) => {
+  try {
+    const response = await sendRconCommand("tps");
+    res.status(200).json({
+      tps: parseFloat(response.slice(31, 35)),
+    });
+  } catch (err) {
+    res.json(500).json({
+      message: err,
+    });
+  }
+});
+
 // เริ่มเซิร์ฟเวอร์
 app.listen(port, () => {
   console.log(`Minecraft Whitelist API is running on port ${port}`);
