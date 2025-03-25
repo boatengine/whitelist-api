@@ -1,27 +1,24 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { Rcon } = require("rcon-client");
+require("dotenv").config();
 
 const app = express();
 const port = 3000;
 app.use(express.json());
 app.use(cors());
 
-// ตรวจสอบค่าพอร์ตจาก .env
 const rconPort = parseInt(process.env.RCON_PORT, 10);
 if (isNaN(rconPort) || rconPort < 0 || rconPort > 65535) {
   console.warn("Invalid RCON_PORT. Using default: 25575");
 }
 
-// ข้อมูลการเชื่อมต่อ RCON
 const rconConfig = {
   host: process.env.RCON_HOST || "127.0.0.1",
-  port: isNaN(rconPort) ? 25575 : rconPort, // ใช้ 25575 ถ้าพอร์ตผิดพลาด
+  port: isNaN(rconPort) ? 25575 : rconPort,
   password: process.env.RCON_PASSWORD || "",
 };
 
-// ฟังก์ชันเชื่อมต่อ RCON
 async function sendRconCommand(command) {
   const rcon = new Rcon(rconConfig);
   await rcon.connect();
@@ -30,7 +27,6 @@ async function sendRconCommand(command) {
   return response;
 }
 
-// เพิ่มผู้เล่นใน Whitelist
 app.post("/api/add-whitelist", async (req, res) => {
   const { username } = req.body;
   if (!username) return res.status(400).json({ error: "Username is required" });
@@ -45,7 +41,6 @@ app.post("/api/add-whitelist", async (req, res) => {
   }
 });
 
-// แสดงรายชื่อ Whitelist
 app.get("/api/whitelist", async (req, res) => {
   try {
     const response = await sendRconCommand("whitelist list");
@@ -57,7 +52,6 @@ app.get("/api/whitelist", async (req, res) => {
   }
 });
 
-// ลบผู้เล่นออกจาก Whitelist
 app.post("/api/remove-whitelist", async (req, res) => {
   const { username } = req.body;
   if (!username) return res.status(400).json({ error: "Username is required" });
@@ -109,8 +103,8 @@ app.get("/api/tps", async (req, res) => {
     });
   }
 });
+// dev
 
-// เริ่มเซิร์ฟเวอร์
 app.listen(port, () => {
   console.log(`Minecraft Whitelist API is running on port ${port}`);
 });
