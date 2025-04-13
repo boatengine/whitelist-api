@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  minecraft-api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      RCON_HOST: 192.168.1.248
+      RCON_PORT: 25575
+      RCON_PASSWORD: boateiei
+    restart: unless-stopped
